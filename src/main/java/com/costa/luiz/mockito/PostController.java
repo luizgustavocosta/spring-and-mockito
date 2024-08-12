@@ -1,13 +1,14 @@
 package com.costa.luiz.mockito;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/posts")
 class PostController {
     private final PostService postService;
 
@@ -15,8 +16,17 @@ class PostController {
         this.postService = postService;
     }
     @PostMapping
-    ResponseEntity<Post> postarMensagem(@RequestBody PostRequest request) {
-        Post novoPost = postService.criarPost(request.getTexto(), request.getUsuario());
+    ResponseEntity<Post> create(@RequestBody PostRequest request) {
+        Post novoPost = postService.create(request.getTexto(), request.getUsuario());
+        return ResponseEntity.ok(novoPost);
+    }
+
+    @GetMapping("/create")
+    ResponseEntity<Post> mockCreate() {
+        PostRequest request = new PostRequest();
+        request.setTexto("teste");
+        request.setUsuario("luiz");
+        Post novoPost = postService.create(request.getTexto(), request.getUsuario());
         return ResponseEntity.ok(novoPost);
     }
 }

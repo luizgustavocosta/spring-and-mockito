@@ -50,4 +50,11 @@ public class Post {
         }
     }
 
+    public String getTexto() {
+        return texto;
+    }
+
+    public User getAutor() {
+        return autor;
+    }
 }

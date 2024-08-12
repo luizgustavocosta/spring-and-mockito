@@ -6,21 +6,23 @@ import java.util.List;
 @Service
 public class PostService {
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
-    public void postarTweet(String texto, User usuario) {
-        postRepository.saveAndFlush(new Post(texto, usuario));
+    public Post findById(Long id) {
+        return postRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
-
-    public List<Post> listarTweets() {
+    public List<Post> findAll() {
         return postRepository.findAll();
     }
 
-    public Post criarPost(String texto, String usuario) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'criarPost'");
+    public Post create(String text, String userId) {
+        var user = userRepository.findUsersByUserId(userId).orElseThrow(IllegalArgumentException::new);
+        var post = postRepository.save(new Post(text, user));
+        return post;
     }
 }

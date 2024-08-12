@@ -15,6 +15,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String userId;
     private String name;
     private String email;
     private String password;
@@ -26,6 +27,14 @@ public class User {
     private List<String> seguidores;
     @ElementCollection
     private List<String> seguindo;
+
+    public User() {
+    }
+
+    public User(String userId, String name) {
+        this.userId = userId;
+        this.name = name;
+    }
 
     public void follow(User user) {
         // Implementação do método
@@ -54,8 +63,11 @@ public class User {
             System.out.println(this.name + " não estava seguindo " + user.getName());
         }
     }
-
     String getName() {
         return name;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 }
