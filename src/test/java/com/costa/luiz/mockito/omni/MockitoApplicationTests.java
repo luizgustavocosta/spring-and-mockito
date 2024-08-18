@@ -1,4 +1,4 @@
-package com.costa.luiz.mockito;
+package com.costa.luiz.mockito.omni;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

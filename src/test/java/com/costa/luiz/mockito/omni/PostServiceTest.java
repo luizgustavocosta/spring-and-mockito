@@ -1,5 +1,10 @@
-package com.costa.luiz.mockito;
+package com.costa.luiz.mockito.omni;
 
+import com.costa.luiz.mockito.post.Post;
+import com.costa.luiz.mockito.post.PostRepository;
+import com.costa.luiz.mockito.post.PostService;
+import com.costa.luiz.mockito.user.User;
+import com.costa.luiz.mockito.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -16,7 +21,7 @@ class PostServiceTest {
         // Arrange
         PostRepository postRepository = Mockito.mock(PostRepository.class);
         UserRepository userRepository = Mockito.mock(UserRepository.class);
-        PostService postService = new PostService(postRepository, userRepository);
+        PostService postService = new PostService(postRepository, userRepository, null);
         User user = new User();
         String text = "Valid tweet text";
         String userId = "validUserId";
@@ -38,7 +43,7 @@ class PostServiceTest {
         // Arrange
         PostRepository postRepository = Mockito.mock(PostRepository.class);
         UserRepository userRepository = Mockito.mock(UserRepository.class);
-        PostService postService = new PostService(postRepository, userRepository);
+        PostService postService = new PostService(postRepository, userRepository, null);
         String text = "Valid tweet text";
         String userId = "invalidUserId";
 

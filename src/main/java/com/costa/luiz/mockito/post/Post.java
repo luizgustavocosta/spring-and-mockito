@@ -1,16 +1,15 @@
-package com.costa.luiz.mockito;
+package com.costa.luiz.mockito.post;
 
+import com.costa.luiz.mockito.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -22,14 +21,11 @@ public class Post {
     @OneToOne
     private User autor;
     private LocalDateTime data;
-    @ManyToMany
-    private List<User> likes;
 
     public Post(String texto, User autor) {
         this.texto = texto;
         this.autor = autor;
         this.data = LocalDateTime.now();
-        this.likes = new ArrayList<>();
     }
 
     public Post() {
@@ -41,20 +37,30 @@ public class Post {
         }
     }
 
-    public void adicionarLike(User usuario) {
-        if (!likes.contains(usuario.getName())) {
-            likes.add(usuario);
-            System.out.println(usuario.getName() + " curtiu o tweet de " + autor.getName());
-        } else {
-            System.out.println(usuario.getName() + " já curtiu este tweet anteriormente");
-        }
+    public Long getId() {
+        return id;
     }
-
     public String getTexto() {
         return texto;
     }
 
+    public void setTexto(String texto) {
+        this.texto = texto;
+    }
+
     public User getAutor() {
         return autor;
+    }
+
+    public void setAutor(User autor) {
+        this.autor = autor;
+    }
+
+    public LocalDateTime getData() {
+        return data;
+    }
+
+    public void setData(LocalDateTime data) {
+        this.data = data;
     }
 }

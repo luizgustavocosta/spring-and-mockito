@@ -1,4 +1,4 @@
-package com.costa.luiz.mockito;
+package com.costa.luiz.mockito.post;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("/api/posts")
 class PostController {
     private final PostService postService;
 
@@ -17,37 +19,27 @@ class PostController {
     }
     @PostMapping
     ResponseEntity<Post> create(@RequestBody PostRequest request) {
-        Post novoPost = postService.create(request.getTexto(), request.getUsuario());
+        Post novoPost = postService.create(request.texto(), request.userId());
         return ResponseEntity.ok(novoPost);
     }
 
-    @GetMapping("/create")
+    @GetMapping("/mock-creation")
     ResponseEntity<Post> mockCreate() {
-        PostRequest request = new PostRequest();
-        request.setTexto("teste");
-        request.setUsuario("luiz");
-        Post novoPost = postService.create(request.getTexto(), request.getUsuario());
+        PostRequest request = new PostRequest("deadpool","Watch the movie");
+        Post novoPost = postService.create(request.texto(), request.userId());
         return ResponseEntity.ok(novoPost);
     }
-}
 
-class PostRequest {
-    private String texto;
-    private String usuario;
-
-    public String getTexto() {
-        return texto;
+    @GetMapping
+    List<PostResponse> all() {
+        return postService.findAll().stream()
+                .map(post-> new PostResponse(post.getId(), post.getTexto(), post.getAutor(), post.getData()))
+                .toList();
     }
 
-    public void setTexto(String texto) {
-        this.texto = texto;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
+    @GetMapping("/rabbit")
+    void rabbit() {
+        postService.sendToRabbit();
     }
 }
+
