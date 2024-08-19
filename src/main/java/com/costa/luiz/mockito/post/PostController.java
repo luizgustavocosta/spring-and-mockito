@@ -33,13 +33,8 @@ class PostController {
     @GetMapping
     List<PostResponse> all() {
         return postService.findAll().stream()
-                .map(post-> new PostResponse(post.getId(), post.getTexto(), post.getAutor(), post.getData()))
+                .map(post-> new PostResponse(post.getId(), post.getText(), post.getAuthor(), post.getDate()))
                 .toList();
-    }
-
-    @GetMapping("/rabbit")
-    void rabbit() {
-        postService.sendToRabbit();
     }
 }
 

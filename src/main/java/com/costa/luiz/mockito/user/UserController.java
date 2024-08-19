@@ -3,7 +3,6 @@ package com.costa.luiz.mockito.user;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,16 +22,11 @@ public class UserController {
     public UserResponse get(@PathVariable("id") Long id) {
         User user = userService.get(id);
         return new UserResponse(user.getId(), user.getUserId(), user.getName(),
-                String.join(",", user.getFollowing()),
-                String.join(",", user.getFollowers()));
+                listAsString(user.getFollowing()),
+                listAsString(user.getFollowers()));
     }
 
-    @PutMapping("/{id}")
-    public User update(@PathVariable("id") Long id, User user) {
-        return userService.update(id, user);
-    }
-
-    @PostMapping("/")
+    @PostMapping
     public User create(UserRequest userRequest) {
         return userService.create(userRequest.toUser());
     }
@@ -42,12 +36,20 @@ public class UserController {
         return userService.follow(id, followerId);
     }
 
+    @PostMapping("/{id}/unfollow/{followerId}")
+    public User unfollow(@PathVariable("id") String id, @PathVariable("followerId") String followerId) {
+        return userService.unfollow(id, followerId);
+    }
+
     @GetMapping
     List<UserResponse> all() {
         return userService.all().stream()
                 .map(user -> new UserResponse(user.getId(), user.getUserId(), user.getName(),
-                        String.join(",", user.getFollowers()),
-                        String.join(",", user.getFollowing()))).toList();
+                        listAsString(user.getFollowers()),
+                        listAsString(user.getFollowing()))).toList();
     }
 
+    private String listAsString(List<String> elements) {
+        return String.join(",", elements);
+    }
 }

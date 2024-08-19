@@ -9,7 +9,6 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 @Entity
 @Table(name = "posts")
@@ -17,50 +16,32 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String texto;
+    private String text;
     @OneToOne
-    private User autor;
-    private LocalDateTime data;
+    private User author;
+    private LocalDateTime date;
 
-    public Post(String texto, User autor) {
-        this.texto = texto;
-        this.autor = autor;
-        this.data = LocalDateTime.now();
+    public Post(String text, User author) {
+        this.text = text;
+        this.author = author;
+        this.date = LocalDateTime.now();
     }
 
     public Post() {
     }
 
-    public void validarTweet(String texto) {
-        if (texto.length() > 140) {
-            throw new IllegalArgumentException("O tweet não pode ter mais de 140 caracteres");
-        }
-    }
-
     public Long getId() {
         return id;
     }
-    public String getTexto() {
-        return texto;
+    public String getText() {
+        return text;
     }
 
-    public void setTexto(String texto) {
-        this.texto = texto;
+    public User getAuthor() {
+        return author;
     }
 
-    public User getAutor() {
-        return autor;
-    }
-
-    public void setAutor(User autor) {
-        this.autor = autor;
-    }
-
-    public LocalDateTime getData() {
-        return data;
-    }
-
-    public void setData(LocalDateTime data) {
-        this.data = data;
+    public LocalDateTime getDate() {
+        return date;
     }
 }

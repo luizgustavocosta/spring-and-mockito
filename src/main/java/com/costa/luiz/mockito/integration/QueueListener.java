@@ -7,7 +7,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 @Service
-class QueueListener {
+public class QueueListener {
 
     private static final Logger log = LoggerFactory.getLogger(QueueListener.class);
 
@@ -16,7 +16,7 @@ class QueueListener {
         log.info("Message received from queue: {}", message);
     }
 
-    @RabbitListener(id = "consumer", queues = "stream.sboot-mockito")
+    @RabbitListener(id = "consumer", queues = "${rabbitmq.stream.name}")
     public void consumerStream(Message message) {
         log.info("Message received from stream: {}", new String(message.getBody()));
     }
