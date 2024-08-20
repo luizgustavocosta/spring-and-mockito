@@ -51,10 +51,10 @@ class UserService {
     User unfollow(String userId, String followerId) {
         if (userId.equalsIgnoreCase(followerId)) throw new IllegalArgumentException("User cannot unfollow itself");
 
-        User user = userRepository.findUsersByUserId(userId).get();
+        User user = userRepository.findUsersByUserId(userId).orElseThrow();
         if (user.getFollowing().contains(followerId)) {
             user.getFollowing().remove(followerId);
-            User follower = userRepository.findUsersByUserId(followerId).get();
+            User follower = userRepository.findUsersByUserId(followerId).orElseThrow();
             follower.getFollowers().remove(user.getUserId());
             userRepository.save(user);
             userRepository.save(follower);

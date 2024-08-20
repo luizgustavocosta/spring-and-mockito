@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 class QueueListener {
-
     private static final Logger log = LoggerFactory.getLogger(QueueListener.class);
 
     @RabbitListener(queues = "${rabbitmq.queue.name}")

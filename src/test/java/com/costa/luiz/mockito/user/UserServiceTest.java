@@ -13,9 +13,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,6 +32,39 @@ class UserServiceTest {
 
     @Mock UserRepository userRepository;
     @Mock NotificationService notificationService;
+
+    @DisplayName("Successfully creates a new user and returns the user object")
+    @Test
+    void create_user_success() {
+        var newUser = new User("user123", "John Doe");
+        var savedUser = new User("user123", "John Doe");
+        savedUser.setId(1L);
+
+        Mockito.when(userRepository.save(newUser)).thenReturn(savedUser);
+
+        var result = userService.create(newUser);
+
+        Assertions.assertNotNull(result);
+        assertEquals("user123", result.getUserId());
+        assertEquals("John Doe", result.getName());
+        Mockito.verify(notificationService).newUser("User user123 has been created");
+    }
+
+    @DisplayName("Attempt to create a user with null values")
+    @Test
+    void attempt_to_create_user_with_null_values() {
+        User newUser = new User(null, null);
+
+        when(userRepository.save(newUser)).thenThrow(new IllegalArgumentException("User details cannot be null"));
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            userService.create(newUser);
+        });
+
+        assertEquals("User details cannot be null", exception.getMessage());
+        verify(notificationService, never()).newUser(anyString());
+    }
+
     @DisplayName("User successfully follows another user")
     @Test
     void user_successfully_follows_another_user() {
@@ -44,16 +81,36 @@ class UserServiceTest {
         Mockito.verify(userRepository).saveAll(List.of(user, userToFollow));
     }
 
+    @DisplayName("User successfully retrieves an existing user by id")
+    @Test
+    void retrieve_existing_user_by_id_successfully() {
+        var mockUser = new User("user123", "John Doe");
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(mockUser));
+
+        var result = userService.get(1L);
+
+        assertEquals("user123", result.getUserId());
+        assertEquals("John Doe", result.getName());
+    }
+
+    @DisplayName("User throws an exception when user id is not found")
+    @Test
+    void throw_illegal_state_exception_when_user_id_not_found() {
+        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThrows(IllegalStateException.class, () -> userService.get(1L));
+    }
+
     @DisplayName("User not found in the repository")
     @Test
     void user_not_found_in_repository() {
         when(userRepository.findUsersByUserId("user1")).thenReturn(Optional.empty());
 
-        Exception exception = Assertions.assertThrows(IllegalStateException.class, () -> {
+        var exception = assertThrows(IllegalStateException.class, () -> {
             userService.follow("user1", "user2");
         });
 
-        Assertions.assertEquals("User not found", exception.getMessage());
+        assertEquals("User not found", exception.getMessage());
     }
 
     @DisplayName("User tries to unfollow a non-existent user")

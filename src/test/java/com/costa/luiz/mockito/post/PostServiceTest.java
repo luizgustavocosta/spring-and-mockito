@@ -4,6 +4,7 @@ import com.costa.luiz.mockito.integration.NotificationService;
 import com.costa.luiz.mockito.user.User;
 import com.costa.luiz.mockito.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -91,6 +93,37 @@ class PostServiceTest {
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> postService.create(text, userId));
+    }
+
+    @DisplayName("Validates a post and sends a message to the notificationService")
+    @Test
+    void validatePost_sends_message() {
+        var message = "Test message";
+
+        postService.validatePost(message);
+
+        verify(notificationService).newPost(message);
+    }
+
+    @DisplayName("ValidatePost handles excessively long message input")
+    @Test
+    void validatePost_handles_excessively_long_message_input() {
+        var longMessage = "A".repeat(1000); // Creating a long message
+
+        postService.validatePost(longMessage);
+
+        verify(notificationService).newPost(longMessage);
+    }
+
+    @DisplayName("ValidatePost handles XSS attack patterns")
+    @Test
+    @Disabled
+    void validatePost_handles_xss_attack_patterns() {
+        var message = "<script>alert('XSS Attack');</script>";
+
+        postService.validatePost(message);
+
+        verify(notificationService, never()).newPost(message);
     }
 
 }
