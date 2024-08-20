@@ -6,15 +6,16 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.3.2</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>com.costa.luiz</groupId>
-    <artifactId>mockito</artifactId>
+    <artifactId>spring-and-mockito</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>mockito</name>
-    <description>mockito</description>
+    <name>spring-and-mockito</name>
+    <description>spring-and-mockito</description>
     <properties>
         <java.version>21</java.version>
+        <openapi.version>2.6.0</openapi.version>
     </properties>
     <dependencies>
         <dependency>
@@ -44,12 +45,15 @@
             <artifactId>spring-rabbit-test</artifactId>
             <scope>test</scope>
         </dependency>
-    
-      <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
-    </dependency>
-    
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${openapi.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

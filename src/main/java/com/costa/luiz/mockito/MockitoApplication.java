@@ -1,66 +1,34 @@
 package com.costa.luiz.mockito;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
+import com.costa.luiz.mockito.user.User;
+import com.costa.luiz.mockito.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
+
+import java.util.List;
 
 @SpringBootApplication
 public class MockitoApplication {
-
-    static final String topicExchangeName = "spring-boot-exchange";
-
-    static final String queueName = "spring-boot";
-
-    @Bean
-    Queue queue() {
-        return new Queue(queueName, false);
-    }
-
-    @Bean
-    TopicExchange exchange() {
-        return new TopicExchange(topicExchangeName);
-    }
-
-    @Bean
-    Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("foo.bar.#");
-    }
-
-    @Bean
-    SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
-                                             MessageListenerAdapter listenerAdapter) {
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(queueName);
-        container.setMessageListener(listenerAdapter);
-        return container;
-    }
-
-    @Bean
-    MessageListenerAdapter listenerAdapter(Receiver receiver) {
-        return new MessageListenerAdapter(receiver, "receiveMessage");
-    }
 
     public static void main(String[] args) {
         SpringApplication.run(MockitoApplication.class, args);
     }
 
-    @Autowired private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @EventListener(ApplicationReadyEvent.class)
-    public void start() {
-        User user = new User("luiz", "Luiz Costa");
-        userRepository.save(user);
+    void start() {
+        var deadpool = new User("deadpool", "Wade Wilson");
+        var wolverine = new User("wolverine", "James Howlett");
+        var gambit = new User("gambit", "Remy Etienne Lebau");
+        var storm = new User("storm", "Ororo Munroe");
+        var xavier = new User("xavier", "Charles Francis Xavier");
+        var magneto = new User("magneto", "Max Eisenhardt");
+        userRepository.saveAll(List.of(deadpool, wolverine, gambit, storm, xavier, magneto));
     }
 
 }

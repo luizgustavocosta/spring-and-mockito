@@ -1,4 +1,4 @@
-package com.costa.luiz.mockito;
+package com.costa.luiz.mockito.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
