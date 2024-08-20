@@ -10,45 +10,47 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-public class UserController {
+class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @RequestMapping("/{id}")
-    public UserResponse get(@PathVariable("id") Long id) {
-        User user = userService.get(id);
-        return new UserResponse(user.getId(), user.getUserId(), user.getName(),
-                listAsString(user.getFollowing()),
-                listAsString(user.getFollowers()));
+    @GetMapping("/{id}")
+    UserResponse get(@PathVariable("id") Long id) {
+        var user = userService.get(id);
+        return toUserResponse(user);
     }
 
     @PostMapping
-    public User create(UserRequest userRequest) {
-        return userService.create(userRequest.toUser());
+    UserResponse create(UserRequest userRequest) {
+        var user = userService.create(userRequest.toUser());
+        return toUserResponse(user);
     }
 
     @PostMapping("/{id}/follow/{followerId}")
-    public User follow(@PathVariable("id") String id, @PathVariable("followerId") String followerId) {
+    User follow(@PathVariable("id") String id, @PathVariable("followerId") String followerId) {
         return userService.follow(id, followerId);
     }
 
     @PostMapping("/{id}/unfollow/{followerId}")
-    public User unfollow(@PathVariable("id") String id, @PathVariable("followerId") String followerId) {
-        return userService.unfollow(id, followerId);
+    UserResponse unfollow(@PathVariable("id") String id, @PathVariable("followerId") String followerId) {
+        return toUserResponse(userService.unfollow(id, followerId));
     }
 
     @GetMapping
-    List<UserResponse> all() {
+    public List<UserResponse> all() {
         return userService.all().stream()
-                .map(user -> new UserResponse(user.getId(), user.getUserId(), user.getName(),
-                        listAsString(user.getFollowers()),
-                        listAsString(user.getFollowing()))).toList();
+                .map(this::toUserResponse).toList();
     }
 
+    private UserResponse toUserResponse(User user) {
+        return new UserResponse(user.getId(), user.getUserId(), user.getName(),
+                listAsString(user.getFollowers()),
+                listAsString(user.getFollowing()));
+    }
     private String listAsString(List<String> elements) {
         return String.join(",", elements);
     }

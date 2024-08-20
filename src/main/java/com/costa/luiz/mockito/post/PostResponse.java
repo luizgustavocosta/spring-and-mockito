@@ -4,5 +4,5 @@ import com.costa.luiz.mockito.user.User;
 
 import java.time.LocalDateTime;
 
-record PostResponse(Long id, String texto, User autor, LocalDateTime data) {
+record PostResponse(Long id, String text, User autor, LocalDateTime date) {
 }

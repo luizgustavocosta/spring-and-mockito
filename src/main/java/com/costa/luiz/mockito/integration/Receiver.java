@@ -5,10 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Receiver {
+class Receiver {
     private static final Logger log = LoggerFactory.getLogger(Receiver.class);
 
-    public void receiveMessage(Object message) {
+    void receiveMessage(Object message) {
         if (message instanceof String) {
             log.info("Received from Queue < {} >", message);
         } else if (message instanceof byte[] messageAsByteArray) {

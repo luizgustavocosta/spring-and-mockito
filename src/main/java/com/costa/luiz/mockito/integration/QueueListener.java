@@ -7,17 +7,17 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 @Service
-public class QueueListener {
+class QueueListener {
 
     private static final Logger log = LoggerFactory.getLogger(QueueListener.class);
 
     @RabbitListener(queues = "${rabbitmq.queue.name}")
-    public void listener(String message) {
+    void listener(String message) {
         log.info("Message received from queue: {}", message);
     }
 
     @RabbitListener(id = "consumer", queues = "${rabbitmq.stream.name}")
-    public void consumerStream(Message message) {
+    void consumerStream(Message message) {
         log.info("Message received from stream: {}", new String(message.getBody()));
     }
 

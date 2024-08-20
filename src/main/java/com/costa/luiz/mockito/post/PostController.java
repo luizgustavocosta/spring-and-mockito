@@ -19,14 +19,14 @@ class PostController {
     }
     @PostMapping
     ResponseEntity<Post> create(@RequestBody PostRequest request) {
-        Post novoPost = postService.create(request.texto(), request.userId());
+        Post novoPost = postService.create(request.text(), request.userId());
         return ResponseEntity.ok(novoPost);
     }
 
     @GetMapping("/mock-creation")
     ResponseEntity<Post> mockCreate() {
         PostRequest request = new PostRequest("deadpool","Watch the movie");
-        Post novoPost = postService.create(request.texto(), request.userId());
+        Post novoPost = postService.create(request.text(), request.userId());
         return ResponseEntity.ok(novoPost);
     }
 

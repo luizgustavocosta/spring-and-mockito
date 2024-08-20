@@ -92,7 +92,7 @@ public class User {
         }
 
         public UserBuilder withUserId(String userId) {
-            this.userId = userId;
+            this.userId = userId.trim();
             return this;
         }
 
