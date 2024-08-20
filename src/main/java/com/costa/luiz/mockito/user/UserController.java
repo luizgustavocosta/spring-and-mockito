@@ -1,5 +1,6 @@
 package com.costa.luiz.mockito.user;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/users")
@@ -52,6 +54,9 @@ class UserController {
                 listAsString(user.getFollowing()));
     }
     private String listAsString(List<String> elements) {
-        return String.join(",", elements);
+        if (Objects.nonNull(elements)) {
+            return String.join(",", elements);
+        }
+        return "";
     }
 }

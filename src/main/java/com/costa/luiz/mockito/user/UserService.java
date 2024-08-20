@@ -56,7 +56,8 @@ class UserService {
             user.getFollowing().remove(followerId);
             User follower = userRepository.findUsersByUserId(followerId).get();
             follower.getFollowers().remove(user.getUserId());
-            userRepository.saveAll(List.of(user, follower));
+            userRepository.save(user);
+            userRepository.save(follower);
             log.info("{} stopped following {}", userId, followerId);
         } else {
             log.info("{} wasn't following {}", userId, followerId);
