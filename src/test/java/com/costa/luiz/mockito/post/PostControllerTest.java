@@ -61,7 +61,7 @@ class PostControllerTest {
         var response = postController.all();
 
         assertThat(response.iterator().next())
-                .extracting("id", "text", "autor", "date")
+                .extracting("id", "text", "author", "date")
                 .containsExactly(post.getId(), post.getText(), post.getAuthor(), post.getDate());
     }
 

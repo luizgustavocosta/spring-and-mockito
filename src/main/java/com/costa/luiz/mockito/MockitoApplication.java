@@ -21,7 +21,7 @@ public class MockitoApplication {
     private UserRepository userRepository;
 
     @EventListener(ApplicationReadyEvent.class)
-    void start() {
+    public void start() {
         var deadpool = new User("deadpool", "Wade Wilson");
         var wolverine = new User("wolverine", "James Howlett");
         var gambit = new User("gambit", "Remy Etienne Lebau");
