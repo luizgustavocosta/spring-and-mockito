@@ -25,25 +25,25 @@ class UserService {
 
     User create(User newUser) {
         var user = userRepository.save(newUser);
-        notificationService.newUser(String.format("User %s has been created", user.getUserId()));
+        notificationService.newUser(user);
         return user;
     }
 
-    User follow(String userId, String userToFollow) {
-        if (userId.equalsIgnoreCase(userToFollow)) throw new IllegalArgumentException("User cannot follow itself");
+    User follow(String userId, String toFollow) {
+        if (userId.equalsIgnoreCase(toFollow)) throw new IllegalArgumentException("User cannot follow itself");
 
         User user = userRepository.findUsersByUserId(userId)
                 .orElseThrow(() -> new IllegalStateException("User not found"));
-        User userTofollow = userRepository.findUsersByUserId(userToFollow)
+        User userToFollow = userRepository.findUsersByUserId(toFollow)
                 .orElseThrow(() -> new IllegalStateException("User not found"));
 
-        if (!user.getFollowing().contains(userToFollow)) {
-            user.getFollowing().add(userToFollow);
-            userTofollow.getFollowers().add(userId);
-            userRepository.saveAll(List.of(user, userTofollow));
-            log.info("{} started to follow {}", user.getUserId(), userToFollow);
+        if (!user.getFollowing().contains(toFollow)) {
+            user.getFollowing().add(toFollow);
+            userToFollow.getFollowers().add(userId);
+            userRepository.saveAll(List.of(user, userToFollow));
+            log.info("{} started to follow {}", user.getUserId(), toFollow);
         } else {
-            log.info("{} already following {}", user.getUserId(), userToFollow);
+            log.info("{} already following {}", user.getUserId(), toFollow);
         }
         return user;
     }
@@ -56,8 +56,7 @@ class UserService {
             user.getFollowing().remove(followerId);
             User follower = userRepository.findUsersByUserId(followerId).orElseThrow();
             follower.getFollowers().remove(user.getUserId());
-            userRepository.save(user);
-            userRepository.save(follower);
+            userRepository.saveAll(List.of(user, follower));
             log.info("{} stopped following {}", userId, followerId);
         } else {
             log.info("{} wasn't following {}", userId, followerId);

@@ -1,5 +1,6 @@
 package com.costa.luiz.mockito.integration;
 
+import com.costa.luiz.mockito.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ class NotificationServiceTest {
     @Mock
     RabbitTemplate rabbitTemplate;
     NotificationService notificationService;
+
     @BeforeEach
     void setUp() {
         notificationService = new NotificationService(rabbitTemplate);
@@ -45,6 +47,21 @@ class NotificationServiceTest {
 
         verify(rabbitTemplate)
                 .convertAndSend("exchange.sboot-mockito", "mockito.new_post", message);
+    }
+
+    @DisplayName("Sending a valid User object results in a message being sent to the correct exchange and routing key")
+    @Test
+    void valid_user_message_sent() {
+        // Arrange
+        ReflectionTestUtils.setField(notificationService, "topicExchangeName", "exchange.sboot-mockito");
+        ReflectionTestUtils.setField(notificationService, "routingKeyNewUser", "mockito.new_user");
+        var user = new User("user123", "John Doe");
+
+        // Act
+        notificationService.newUser(user);
+
+        // Assert
+        verify(rabbitTemplate).convertAndSend("exchange.sboot-mockito", "mockito.new_user", user);
     }
 
 }

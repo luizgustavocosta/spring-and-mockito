@@ -1,5 +1,6 @@
 package com.costa.luiz.mockito.integration;
 
+import com.costa.luiz.mockito.user.User;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,10 @@ public class NotificationService {
 
     public void newUser(String message) {
         rabbitTemplate.convertAndSend(topicExchangeName, routingKeyNewUser, message);
+    }
+
+    public void newUser(User user) {
+        rabbitTemplate.convertAndSend(topicExchangeName, routingKeyNewUser, user);
     }
 
     public void newPost(String message) {
