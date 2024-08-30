@@ -47,7 +47,7 @@ class UserServiceTest {
         Assertions.assertNotNull(result);
         assertEquals("user123", result.getUserId());
         assertEquals("John Doe", result.getName());
-        Mockito.verify(notificationService).newUser("User user123 has been created");
+        Mockito.verify(notificationService).newUser(any(User.class));
     }
 
     @DisplayName("Attempt to create a user with null values")
@@ -138,7 +138,7 @@ class UserServiceTest {
 
         userService.unfollow(user.getUserId(), follower.getUserId());
 
-        verify(userRepository, times(2)).save(any(User.class));
+        verify(userRepository, times(1)).saveAll(any(List.class));
         assertFalse(user.getFollowing().contains(follower.getUserId()));
         assertFalse(follower.getFollowers().contains(user.getUserId()));
     }

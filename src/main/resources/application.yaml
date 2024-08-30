@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: spring-and-mockito
+  datasource:
+    password: ''
+    url: jdbc:h2:mem:post;MODE=MYSQL
+    username: root
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  rabbitmq:
+    host: #
+    port: #
+    username: #
+    password: #
+    virtual-host: #
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+rabbitmq:
+  exchange:
+    name: exchange.sboot-mockito
+  queue:
+    name: queue.sboot-mockito
+  routing:
+    key:
+      new_post: mockito.new_post
+      new_user: mockito.new_user
+  stream:
+    name: stream.sboot-mockito
